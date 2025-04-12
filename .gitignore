@@ -1,0 +1,13 @@
+.venv
+__pycache__
+node_modules
+.env
+# supabase
+
+*.zip
+app\.env
+
+merkle_tree.pkl
+
+# app\state.json
+# app/state.json
