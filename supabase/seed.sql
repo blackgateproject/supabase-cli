@@ -1,6 +1,3 @@
--- // for local dev, just update the supabase/seed.sql file and run either supabase start or supabase db reset
--- // it will auto load the tables
-
 -- /// INITIAL TABLES ///
 -- Create table for admin requests, this is where the DID/VC are first stored
 create table public.requests (
