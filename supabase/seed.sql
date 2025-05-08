@@ -10,6 +10,11 @@ create table public.requests (
   created_at timestamp with time zone not null default now(),
   updated_at timestamp with time zone null,
   request_status text not null,
+  total_time double precision null,
+  wallet_generate_time double precision null,
+  wallet_encrypt_time double precision null,
+  zkp_generation_time double precision null,
+  vc_issuance_time double precision null,
   constraint requests_pkey primary key (id),
   constraint requests_did_str_key unique (did_str),
   constraint requests_isvcsent_check check (("isVCSent" = any (array[true, false]))),
@@ -76,6 +81,19 @@ create table public.merkle (
   constraint merkle_pkey primary key (did),
   constraint merkle_hash_key unique (hash)
 ) TABLESPACE pg_default;
+
+
+CREATE OR REPLACE VIEW public.performance_metrics AS
+SELECT
+  did_str,
+  total_time,
+  wallet_generate_time,
+  wallet_encrypt_time,
+  zkp_generation_time,
+  vc_issuance_time
+FROM
+  public.requests;
+
 
 -- create a view to read the auth.sessions table
 create view public.sessions as
