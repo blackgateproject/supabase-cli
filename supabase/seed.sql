@@ -32,6 +32,26 @@ create table public.requests (
   )
 ) TABLESPACE pg_default;
 
+create table public.times_of_time (
+  did_str text not null,
+  wallet_gen_time double precision null default 0,
+  wallet_enc_time double precision null default 0,
+  network_info_time double precision null default 0,
+  smt_local_add_time double precision null default 0,
+  vc_issuance_time double precision null default 0,
+  smt_onchain_add_time double precision null default 0,
+  vp_gen_time double precision null default 0,
+  client_register_total_time double precision null default 0,
+  vp_verify_time double precision null default 0,
+  vc_verify_time double precision null default 0,
+  smt_local_verify_time double precision null default 0,
+  smt_onchain_verify_time double precision null default 0,
+  smt_proof_gen_time double precision null default 0,
+  smt_on_server_verify_time double precision null default 0,
+  smt_total_verify_time double precision null default 0,
+  constraint times_of_time_pkey primary key (did_str)
+) TABLESPACE pg_default;
+
 --- Login events
 create table public.login_events (
   did_str text not null,
