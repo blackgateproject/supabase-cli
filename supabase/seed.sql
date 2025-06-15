@@ -166,3 +166,98 @@ from
   join requests r on jsonb_extract_path_text(u.raw_user_meta_data, variadic array['did'::text]) = r.did_str
 where
   r.request_status = 'approved'::text;
+
+
+
+  -- Added a few more views for metrics
+  create view public.times_of_time_summary as
+select
+  avg(times_of_time.wallet_gen_time) as avg_wallet_gen_time,
+  min(times_of_time.wallet_gen_time) as min_wallet_gen_time,
+  max(times_of_time.wallet_gen_time) as max_wallet_gen_time,
+  sum(times_of_time.wallet_gen_time) as total_wallet_gen_time,
+  avg(times_of_time.wallet_enc_time) as avg_wallet_enc_time,
+  min(times_of_time.wallet_enc_time) as min_wallet_enc_time,
+  max(times_of_time.wallet_enc_time) as max_wallet_enc_time,
+  sum(times_of_time.wallet_enc_time) as total_wallet_enc_time,
+  avg(times_of_time.network_info_time) as avg_network_info_time,
+  min(times_of_time.network_info_time) as min_network_info_time,
+  max(times_of_time.network_info_time) as max_network_info_time,
+  sum(times_of_time.network_info_time) as total_network_info_time,
+  avg(times_of_time.smt_local_add_time) as avg_smt_local_add_time,
+  min(times_of_time.smt_local_add_time) as min_smt_local_add_time,
+  max(times_of_time.smt_local_add_time) as max_smt_local_add_time,
+  sum(times_of_time.smt_local_add_time) as total_smt_local_add_time,
+  avg(times_of_time.vc_issuance_time) as avg_vc_issuance_time,
+  min(times_of_time.vc_issuance_time) as min_vc_issuance_time,
+  max(times_of_time.vc_issuance_time) as max_vc_issuance_time,
+  sum(times_of_time.vc_issuance_time) as total_vc_issuance_time,
+  avg(times_of_time.smt_onchain_add_time) as avg_smt_onchain_add_time,
+  min(times_of_time.smt_onchain_add_time) as min_smt_onchain_add_time,
+  max(times_of_time.smt_onchain_add_time) as max_smt_onchain_add_time,
+  sum(times_of_time.smt_onchain_add_time) as total_smt_onchain_add_time,
+  avg(times_of_time.vp_gen_time) as avg_vp_gen_time,
+  min(times_of_time.vp_gen_time) as min_vp_gen_time,
+  max(times_of_time.vp_gen_time) as max_vp_gen_time,
+  sum(times_of_time.vp_gen_time) as total_vp_gen_time,
+  avg(times_of_time.client_register_total_time) as avg_client_register_total_time,
+  min(times_of_time.client_register_total_time) as min_client_register_total_time,
+  max(times_of_time.client_register_total_time) as max_client_register_total_time,
+  sum(times_of_time.client_register_total_time) as total_client_register_total_time,
+  avg(times_of_time.vp_verify_time) as avg_vp_verify_time,
+  min(times_of_time.vp_verify_time) as min_vp_verify_time,
+  max(times_of_time.vp_verify_time) as max_vp_verify_time,
+  sum(times_of_time.vp_verify_time) as total_vp_verify_time,
+  avg(times_of_time.vc_verify_time) as avg_vc_verify_time,
+  min(times_of_time.vc_verify_time) as min_vc_verify_time,
+  max(times_of_time.vc_verify_time) as max_vc_verify_time,
+  sum(times_of_time.vc_verify_time) as total_vc_verify_time,
+  avg(times_of_time.smt_local_verify_time) as avg_smt_local_verify_time,
+  min(times_of_time.smt_local_verify_time) as min_smt_local_verify_time,
+  max(times_of_time.smt_local_verify_time) as max_smt_local_verify_time,
+  sum(times_of_time.smt_local_verify_time) as total_smt_local_verify_time,
+  avg(times_of_time.smt_onchain_verify_time) as avg_smt_onchain_verify_time,
+  min(times_of_time.smt_onchain_verify_time) as min_smt_onchain_verify_time,
+  max(times_of_time.smt_onchain_verify_time) as max_smt_onchain_verify_time,
+  sum(times_of_time.smt_onchain_verify_time) as total_smt_onchain_verify_time,
+  avg(times_of_time.smt_proof_gen_time) as avg_smt_proof_gen_time,
+  min(times_of_time.smt_proof_gen_time) as min_smt_proof_gen_time,
+  max(times_of_time.smt_proof_gen_time) as max_smt_proof_gen_time,
+  sum(times_of_time.smt_proof_gen_time) as total_smt_proof_gen_time,
+  avg(times_of_time.smt_on_server_verify_time) as avg_smt_on_server_verify_time,
+  min(times_of_time.smt_on_server_verify_time) as min_smt_on_server_verify_time,
+  max(times_of_time.smt_on_server_verify_time) as max_smt_on_server_verify_time,
+  sum(times_of_time.smt_on_server_verify_time) as total_smt_on_server_verify_time,
+  avg(times_of_time.smt_total_verify_time) as avg_smt_total_verify_time,
+  min(times_of_time.smt_total_verify_time) as min_smt_total_verify_time,
+  max(times_of_time.smt_total_verify_time) as max_smt_total_verify_time,
+  sum(times_of_time.smt_total_verify_time) as total_smt_total_verify_time
+from
+  times_of_time;
+
+
+  -- second summary view for metrics
+  create view public.times_of_time_summary_combined as
+select
+  avg(
+    times_of_time.wallet_gen_time + times_of_time.wallet_enc_time + times_of_time.network_info_time
+  ) as avg_idissue_time,
+  sum(
+    times_of_time.wallet_gen_time + times_of_time.wallet_enc_time + times_of_time.network_info_time
+  ) as total_idissue_time,
+  avg(
+    times_of_time.smt_local_add_time + times_of_time.vc_issuance_time + times_of_time.smt_onchain_add_time
+  ) as avg_idprove_time,
+  sum(
+    times_of_time.smt_local_add_time + times_of_time.vc_issuance_time + times_of_time.smt_onchain_add_time
+  ) as total_idprove_time,
+  avg(
+    times_of_time.vp_gen_time + times_of_time.client_register_total_time + times_of_time.vp_verify_time + times_of_time.vc_verify_time + times_of_time.smt_local_verify_time + times_of_time.smt_onchain_verify_time + times_of_time.smt_proof_gen_time + times_of_time.smt_on_server_verify_time
+  ) as avg_iverify_time,
+  sum(
+    times_of_time.vp_gen_time + times_of_time.client_register_total_time + times_of_time.vp_verify_time + times_of_time.vc_verify_time + times_of_time.smt_local_verify_time + times_of_time.smt_onchain_verify_time + times_of_time.smt_proof_gen_time + times_of_time.smt_on_server_verify_time
+  ) as total_iverify_time,
+  avg(times_of_time.smt_total_verify_time) as avg_update_metrics_time,
+  sum(times_of_time.smt_total_verify_time) as total_update_metrics_time
+from
+  times_of_time;
