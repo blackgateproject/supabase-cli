@@ -261,3 +261,40 @@ select
   sum(times_of_time.smt_total_verify_time) as total_update_metrics_time
 from
   times_of_time;
+
+
+  -- We do a lil trollin :D
+  CREATE VIEW public.times_of_time_summary_combined_without_enc AS
+SELECT
+  -- For /register (IdIssue) - only wallet_gen_time and network_info_time
+  AVG(
+    times_of_time.wallet_gen_time + times_of_time.network_info_time
+  ) AS avg_idissue_time,
+  SUM(
+    times_of_time.wallet_gen_time + times_of_time.network_info_time
+  ) AS total_idissue_time,
+
+  -- For /poll (IdProve) - same as before, no change
+  AVG(
+    times_of_time.smt_local_add_time + times_of_time.vc_issuance_time + times_of_time.smt_onchain_add_time
+  ) AS avg_idprove_time,
+  SUM(
+    times_of_time.smt_local_add_time + times_of_time.vc_issuance_time + times_of_time.smt_onchain_add_time
+  ) AS total_idprove_time,
+
+  -- For /verify (IVerify) - same as before, no change
+  AVG(
+    times_of_time.vp_gen_time + times_of_time.client_register_total_time + times_of_time.vp_verify_time + times_of_time.vc_verify_time + 
+    times_of_time.smt_local_verify_time + times_of_time.smt_onchain_verify_time + times_of_time.smt_proof_gen_time + times_of_time.smt_on_server_verify_time
+  ) AS avg_iverify_time,
+  SUM(
+    times_of_time.vp_gen_time + times_of_time.client_register_total_time + times_of_time.vp_verify_time + times_of_time.vc_verify_time + 
+    times_of_time.smt_local_verify_time + times_of_time.smt_onchain_verify_time + times_of_time.smt_proof_gen_time + times_of_time.smt_on_server_verify_time
+  ) AS total_iverify_time,
+
+  -- For /update-metrics (IVerify) - no change
+  AVG(times_of_time.smt_total_verify_time) AS avg_update_metrics_time,
+  SUM(times_of_time.smt_total_verify_time) AS total_update_metrics_time
+
+FROM
+  times_of_time;
