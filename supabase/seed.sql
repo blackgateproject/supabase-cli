@@ -6,15 +6,11 @@ create table public.requests (
   form_data jsonb not null,
   network_info jsonb null default '{"ip_address": "No IP", "user_agent": "No User Agent", "location_lat": "No lat", "location_long": "No long", "user_language": "No Lang"}'::jsonb,
   "isVCSent" boolean not null default false,
+  "isRevoked" boolena not null default false,
   verifiable_cred jsonb null,
   created_at timestamp with time zone not null default now(),
   updated_at timestamp with time zone null,
   request_status text not null,
-  total_time double precision null,
-  wallet_generate_time double precision null,
-  wallet_encrypt_time double precision null,
-  zkp_generation_time double precision null,
-  vc_issuance_time double precision null,
   constraint requests_pkey primary key (id),
   constraint requests_did_str_key unique (did_str),
   constraint requests_isvcsent_check check (("isVCSent" = any (array[true, false]))),
@@ -31,7 +27,6 @@ create table public.requests (
     )
   )
 ) TABLESPACE pg_default;
-
 create table public.times_of_time (
   did_str text not null,
   wallet_gen_time double precision null default 0,
