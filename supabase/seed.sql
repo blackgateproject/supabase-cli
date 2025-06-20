@@ -6,7 +6,7 @@ create table public.requests (
   form_data jsonb not null,
   network_info jsonb null default '{"ip_address": "No IP", "user_agent": "No User Agent", "location_lat": "No lat", "location_long": "No long", "user_language": "No Lang"}'::jsonb,
   "isVCSent" boolean not null default false,
-  "isRevoked" boolena not null default false,
+  "isRevoked" boolean not null default false,
   verifiable_cred jsonb null,
   created_at timestamp with time zone not null default now(),
   updated_at timestamp with time zone null,
@@ -97,17 +97,6 @@ create table public.merkle (
   constraint merkle_hash_key unique (hash)
 ) TABLESPACE pg_default;
 
-
-CREATE OR REPLACE VIEW public.performance_metrics AS
-SELECT
-  did_str,
-  total_time,
-  wallet_generate_time,
-  wallet_encrypt_time,
-  zkp_generation_time,
-  vc_issuance_time
-FROM
-  public.requests;
 
 
 -- create a view to read the auth.sessions table
