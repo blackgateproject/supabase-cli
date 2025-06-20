@@ -44,6 +44,7 @@ create table public.times_of_time (
   smt_proof_gen_time double precision null default 0,
   smt_on_server_verify_time double precision null default 0,
   smt_total_verify_time double precision null default 0,
+  revoke_time double precision null default 0,
   constraint times_of_time_pkey primary key (did_str)
 ) TABLESPACE pg_default;
 
@@ -215,7 +216,13 @@ select
   avg(times_of_time.smt_total_verify_time) as avg_smt_total_verify_time,
   min(times_of_time.smt_total_verify_time) as min_smt_total_verify_time,
   max(times_of_time.smt_total_verify_time) as max_smt_total_verify_time,
-  sum(times_of_time.smt_total_verify_time) as total_smt_total_verify_time
+  sum(times_of_time.smt_total_verify_time) as total_smt_total_verify_time,
+  
+  avg(times_of_time.revoke_time) as avg_revoke_time,
+  min(times_of_time.revoke_time) as min_revoke_time,
+  max(times_of_time.revoke_time) as max_revoke_time,
+  sum(times_of_time.revoke_time) as total_revoke_time
+
 from
   times_of_time;
 
@@ -241,6 +248,8 @@ select
   sum(
     times_of_time.vp_gen_time + times_of_time.client_register_total_time + times_of_time.vp_verify_time + times_of_time.vc_verify_time + times_of_time.smt_local_verify_time + times_of_time.smt_onchain_verify_time + times_of_time.smt_proof_gen_time + times_of_time.smt_on_server_verify_time
   ) as total_iverify_time,
+  avg(times_of_time.revoke_time) as avg_revoke_time,
+  sum(times_of_time.revoke_time) as total_revoke_time,
   avg(times_of_time.smt_total_verify_time) as avg_update_metrics_time,
   sum(times_of_time.smt_total_verify_time) as total_update_metrics_time
 from
@@ -276,6 +285,9 @@ SELECT
     times_of_time.smt_local_verify_time + times_of_time.smt_onchain_verify_time + times_of_time.smt_proof_gen_time + times_of_time.smt_on_server_verify_time
   ) AS total_iverify_time,
 
+  -- For /revoke (Revoke) - no change
+  AVG(times_of_time.revoke_time) AS avg_revoke_time,
+  SUM(times_of_time.revoke_time) AS total_revoke_time,
   -- For /update-metrics (IVerify) - no change
   AVG(times_of_time.smt_total_verify_time) AS avg_update_metrics_time,
   SUM(times_of_time.smt_total_verify_time) AS total_update_metrics_time
